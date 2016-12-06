@@ -519,13 +519,20 @@ class NavigationController extends React.Component {
     })
   }
 
-  __renderNextView () {
-    const view = this.state.mountedViews[1]
-    if (!view) return null
-    return React.cloneElement(view, {
-      ref: `view-${this.__viewIndexes[1]}`,
-      navigationController: this
-    })
+  __renderNextView() {
+    const view = this.state.mountedViews[1];
+    let newProps = {};
+    if (!view) return null;
+    this.props.views.forEach((v, i) => {
+      if (view.key === v.key) {
+        Object.keys(v.props).forEach(key => {
+          newProps[key] = v.props[key];
+        });
+      }
+    });
+    newProps.ref = `view-${this.__viewIndexes[1]}`;
+    newProps.navigationController = this;
+    return React.cloneElement(view, newProps);
   }
 
   render () {
